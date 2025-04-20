@@ -1,114 +1,113 @@
 # ChineseSubFinder
 
-本项目的初衷仅仅是想自动化搞定**限定条件**下 **中文** 字幕，在**第三方**的网站或者接口的下载。
+The original intention of this project was solely to automate the process of downloading **Chinese** subtitles under **specific conditions** from **third-party** websites or APIs.
 
-> 因为 telegram 很长时间回不去（+86原因），相应的聊天组已经污染，也无更多精力维护，已经解散。CSF 后续暂时无计划组建官方的聊天组。请自行辨别相关信息，谨防诈骗。
+> Due to being unable to return to Telegram for a long time (reasons related to +86), the corresponding chat group has been contaminated and there is no more energy to maintain it, so it has been disbanded. CSF currently has no plans to form an official chat group. Please discern relevant information yourself and beware of scams.
 
-## 停更通知
+## Discontinuation Notice
 
-[停更公告](SeeYou/README.md)
+[Discontinuation Announcement](SeeYou/README.md)
 
-## 前言
+## Foreword
 
-移除全功能版本，以后都是轻量级（Lite），tag 继续保留，实则都有是一个。不再直接支持某些字幕网站的下载（人多了，对方服务器扛不住），请使用第三方的字幕下载服务，subtitle best，具体请进入程序后去设置界面，会有引导。
+The full-featured version has been removed. Future versions will all be lightweight (Lite). The tag will be retained, but they are effectively the same. Direct downloading from certain subtitle websites is no longer supported (due to server load from increased users). Please use third-party subtitle download services like Subtitle Best. Guidance is available in the program's settings interface.
 
-最新的版本可以查看 [Docker Hub](https://hub.docker.com/repository/docker/allanpk716/chinesesubfinder)，没有特殊的需求请不要选择 **Beta** 版本使用。
+The latest versions can be found on [Docker Hub](https://hub.docker.com/repository/docker/allanpk716/chinesesubfinder). Unless you have specific needs, please avoid using the **Beta** version.
 
-## 前置要求
+## Prerequisites
 
-如果想顺利的用起来，还是对电影、连续剧的目录有一定的要求的。见文档:
+To use the program smoothly, there are certain requirements for the directory structure of movies and series. See the documentation:
 
-- [电影的推荐目录结构](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E7%94%B5%E5%BD%B1%E5%92%8C%E8%BF%9E%E7%BB%AD%E5%89%A7%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E7%A4%BA%E4%BE%8B.md)
-- [连续剧目录结构要求](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E8%BF%9E%E7%BB%AD%E5%89%A7%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E8%A6%81%E6%B1%82.md)
+- [Recommended Directory Structure for Movies](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E7%94%B5%E5%BD%B1%E5%92%8C%E8%BF%9E%E7%BB%AD%E5%89%A7%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E7%A4%BA%E4%BE%8B.md) (Link content likely in Chinese)
+- [Directory Structure Requirements for Series](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E8%BF%9E%E7%BB%AD%E5%89%A7%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84%E8%A6%81%E6%B1%82.md) (Link content likely in Chinese)
 
 ## How to use
 
-### 如何部署
+### How to Deploy
 
-- [Docker 部署教程](docker/readme.md)
-- [如何在 Windows 上使用](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/v0.20教程/01.如何在Windows上使用.md)
-- [Docker ChineseSubFinder--中文字幕自动下载 | sleele 的博客 - 第三方教程](https://sleele.com/2021/06/25/docker-chinesesubfinder-中文字幕自动下载/)
+- [Docker Deployment Tutorial](docker/readme.md) (This file is likely in Chinese, we can translate it next)
+- [How to Use on Windows](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/v0.20教程/01.如何在Windows上使用.md) (Link content likely in Chinese)
+- [Docker ChineseSubFinder--Automatic Chinese Subtitle Download | sleele's Blog - Third-party Tutorial](https://sleele.com/2021/06/25/docker-chinesesubfinder-中文字幕自动下载/) (External link, likely Chinese)
 
-### 如何使用
+### How to Use
 
-* [使用教程](https://github.com/ChineseSubFinder/ChineseSubFinder/tree/docs/DesignFile/使用教程)
-* [传参启动（v0.41.x 之后才支持）](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/传参启动/传参启动.md)
+* [Usage Tutorial](https://github.com/ChineseSubFinder/ChineseSubFinder/tree/docs/DesignFile/使用教程) (Link content likely in Chinese)
+* [Parameter Startup (Supported after v0.41.x)](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/传参启动/传参启动.md) (Link content likely in Chinese)
 
-### API 文档文档
+### API Documentation
 
-- [对外的 http api](https://github.com/ChineseSubFinder/ChineseSubFinder/tree/docs/DesignFile/ApiKey%E8%AE%BE%E8%AE%A1),以及[示例](https://github.com/ChineseSubFinder/ChineseSubFinder/issues/336)
+- [External HTTP API](https://github.com/ChineseSubFinder/ChineseSubFinder/tree/docs/DesignFile/ApiKey%E8%AE%BE%E8%AE%A1) (Link content likely in Chinese), and [Examples](https://github.com/ChineseSubFinder/ChineseSubFinder/issues/336)
 
-### 高阶设置
+### Advanced Settings
 
-- [字幕时间轴校正 V2](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%AD%97%E5%B9%95%E6%97%B6%E9%97%B4%E8%BD%B4%E6%A0%A1%E6%AD%A3V2.md)，有待更新 v0.20.x 对应的设置
+- [Subtitle Timeline Correction V2](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%AD%97%E5%B9%95%E6%97%B6%E9%97%B4%E8%BD%B4%E6%A0%A1%E6%AD%A3V2.md) (Needs updating for v0.20.x settings, link content likely in Chinese)
 
-建议了解的文档：
+Recommended documentation to understand:
 
-- [关于字幕名称命名格式说明](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%85%B3%E4%BA%8E%E5%AD%97%E5%B9%95%E5%90%8D%E7%A7%B0%E5%91%BD%E5%90%8D%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E.md)
+- [Explanation of Subtitle Naming Format](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%85%B3%E4%BA%8E%E5%AD%97%E5%B9%95%E5%90%8D%E7%A7%B0%E5%91%BD%E5%90%8D%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E.md) (Link content likely in Chinese)
 
-如果文档没有及时更新，或者描述含糊、歧义的，欢迎提 [ISSUES](https://github.com/ChineseSubFinder/ChineseSubFinder/issues)。
+If the documentation is not updated in time, or if descriptions are vague or ambiguous, feel free to open an [ISSUE](https://github.com/ChineseSubFinder/ChineseSubFinder/issues).
 
-## 问题列表
+## FAQ
 
-如果遇到问题了，可以先看看这里总结的问题，如果未能解决，依然可以继续提问。[问题列表](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E9%97%AE%E9%A2%98%E5%88%97%E8%A1%A8.md)
+If you encounter problems, you can first check the issues summarized here. If it's not resolved, you can still ask. [FAQ List](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E9%97%AE%E9%A2%98%E5%88%97%E8%A1%A8.md) (Link content likely in Chinese)
 
-## 其他文档
+## Other Documentation
 
-- [削刮器的推荐设置](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%89%8A%E5%88%AE%E5%99%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE.md)
-- [如何判断视频是否需要下载、更新字幕的](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E8%A7%86%E9%A2%91%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E4%B8%8B%E8%BD%BD%E3%80%81%E6%9B%B4%E6%96%B0%E5%AD%97%E5%B9%95%E7%9A%84.md)
-- [设计](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E8%AE%BE%E8%AE%A1.md)
-- [字幕时间轴校正功能实现解析(有待补全)](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/字幕时间轴校正功能实现解析/字幕时间轴校正功能实现解析.md)
+- [Recommended Scraper Settings](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%89%8A%E5%88%AE%E5%99%A8%E7%9A%84%E6%8E%A8%E8%8D%90%E8%AE%BE%E7%BD%AE.md) (Link content likely in Chinese)
+- [How to Determine if a Video Needs Subtitles Downloaded/Updated](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E8%A7%86%E9%A2%91%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E4%B8%8B%E8%BD%BD%E3%80%81%E6%9B%B4%E6%96%B0%E5%AD%97%E5%B9%95%E7%9A%84.md) (Link content likely in Chinese)
+- [Design](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/%E8%AE%BE%E8%AE%A1.md) (Link content likely in Chinese)
+- [Analysis of Subtitle Timeline Correction Feature Implementation (To be completed)](https://github.com/ChineseSubFinder/ChineseSubFinder/blob/docs/DesignFile/字幕时间轴校正功能实现解析/字幕时间轴校正功能实现解析.md) (Link content likely in Chinese)
 
-## 如何编译此项目
+## How to Compile This Project
 
-* 首选需要编译 Web 部分，见 frontend/README.md
+*   First, you need to compile the Web part, see `frontend/README.md`
+*   Then you can compile the executable program part
 
-* 然后才能编译可执行程序部分
-
-> 如果是 Windows，那么可以从这里下载 [MinGW-w64 - for 32 and 64 bit Windows - Browse /Toolchains targetting Win64 at SourceForge.net](https://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/)
+> If on Windows, you can download MinGW-w64 from here: [MinGW-w64 - for 32 and 64 bit Windows - Browse /Toolchains targetting Win64 at SourceForge.net](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/)
 >
-> - [x86_64-posix-seh](https://sourceforge.net/projects/mingw-w64/files/Toolchains targetting Win64/Personal Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z)
+> - [x86_64-posix-seh](https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/8.1.0/threads-posix/seh/x86_64-8.1.0-release-posix-seh-rt_v6-rev0.7z)
 >
-> 后面的 CGO 编译需要：
+> The subsequent CGO compilation requires:
 >
-> 1、新建变量: PATH，变量值为：xx\mingw64\bin
+> 1.  Create variable: `PATH`, set value to: `xx\mingw64\bin`
+> 2.  Create variable: `LIB`, set value to: `xx\mingw64\lib`
+> 3.  Create variable: `INCLUDE`, set value to: `xx\mingw64\include`
 >
-> 2、新建变量：LIB，变量值为：xx\mingw64\lib
->
-> 3、新建变量：INCLUDE，变量值为：xx\mingw64\include
->
-> 使用 gcc -v 验证是否生效
+> Use `gcc -v` to verify if it's effective.
 
-go mod tidy ，然后需要设置 CGO=1 ，找到 cmd\chinesesubfinder\main.go 这个入口文件就好了。 :joy:
+Run `go mod tidy`, then you need to set `CGO_ENABLED=1`. Find the entry file `cmd\chinesesubfinder\main.go` and you're good to go. :joy:
 
-编译代码如下：
+Compilation code is as follows:
 
+> ```bash
 > cd ./cmd/chinesesubfinder \
 >  && go build -ldflags="-s -w" -o /app/chinesesubfinder
+> ```
 
-跨平台是没有问题的，作者现在就是 Windows 开发的。因为手头没得 Mac OS ，也懒得整虚拟机去试，应该也是可以直接玩起来的。
+Cross-platform compilation is not an issue; the author currently develops on Windows. Since there's no Mac OS available and setting up a VM is tedious, it should work directly there too.
 
-## 版本
+## Version
 
-请务必使用最新版本，这里忘记（懒得）写更新记录的话，可以去 [Releases](https://github.com/ChineseSubFinder/ChineseSubFinder/releases) 查看最新到什么版本了。
+Please be sure to use the latest version. If the update log here is forgotten (due to laziness), you can check [Releases](https://github.com/ChineseSubFinder/ChineseSubFinder/releases) for the latest version.
 
-> 因为业余时间不多，都是断断续续做的，基本我只能记得最近两个版本的功能···
+> Due to limited spare time, work is done intermittently. I can basically only remember the features of the last two versions...
 
-- v0.42.x 新增，支持手动上传字幕，以及在 Web 界面即可预览字幕效果，重写“库”的刷新逻辑。 -- 2022年10月31日
-- ···
-- 完成初版，仅仅支持电影的字幕下载 -- 2021 年 6 月 13 日
+- v0.42.x Added support for manual subtitle upload, previewing subtitle effects in the Web interface, and rewriting the "Library" refresh logic. -- October 31, 2022
+- ...
+- Completed the initial version, only supporting movie subtitle downloads -- June 13, 2021
 
-## 感谢
+## Acknowledgements
 
-- [iMyon (Myon) ](https://github.com/iMyon) 帮搞定 Web 前端部分
-- [devome](https://github.com/devome) 帮解决 Linux 和 Docker 编译、部署相关问题
-- [宅宅还是度度](https://weibo.com/u/2884534224) 设计 Logo
+- [iMyon (Myon) ](https://github.com/iMyon) for handling the Web frontend part
+- [devome](https://github.com/devome) for helping solve Linux and Docker compilation/deployment related issues
+- [宅宅还是度度](https://weibo.com/u/2884534224) for designing the Logo
 
-感谢下面项目的帮助
+Thanks to the following projects for their help:
 
-- [Andyfoo/GoSubTitleSearcher: 字幕搜索查询(go 语言版)](https://github.com/Andyfoo/GoSubTitleSearcher)
+- [Andyfoo/GoSubTitleSearcher: Subtitle search query (Go language version)](https://github.com/Andyfoo/GoSubTitleSearcher)
 - [go-rod/rod: A Devtools driver for web automation and scraping](https://github.com/go-rod/rod)
-- [ausaki/subfinder: 字幕查找器](https://github.com/ausaki/subfinder)
-- [golandscape/sat: 高性能简繁体转换](https://github.com/golandscape/sat)
+- [ausaki/subfinder: Subtitle finder](https://github.com/ausaki/subfinder)
+- [golandscape/sat: High-performance Simplified/Traditional Chinese conversion](https://github.com/golandscape/sat)
 - [smacke/ffsubsync: Automagically synchronize subtitles with video](https://github.com/smacke/ffsubsync)
 - [shimberger/gohls: A server that exposes a directory for video streaming via web interface](https://github.com/shimberger/gohls)
