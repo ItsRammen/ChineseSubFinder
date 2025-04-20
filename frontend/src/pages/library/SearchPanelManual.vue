@@ -1,6 +1,6 @@
 <template>
   <div style="min-height: 300px">
-    <div class="text-grey">点击关键字跳转到网站搜索</div>
+    <div class="text-grey">{{ $t('library.searchSubtitle.manual.instruction') }}</div>
     <q-list separator>
       <q-item v-for="url in searchInfo?.search_url" :key="url">
         <q-item-section top side style="width: 200px" class="text-bold text-black">
@@ -15,7 +15,7 @@
               target="_blank"
               style="text-decoration: none"
             >
-              <q-badge class="cursor-pointer" color="secondary" title="点击跳转到网站搜索">{{ item }}</q-badge>
+              <q-badge class="cursor-pointer" color="secondary" :title="$t('library.searchSubtitle.manual.tooltip')">{{ item }}</q-badge>
             </a>
           </div>
         </q-item-section>

@@ -344,7 +344,11 @@ export default {
       dialogTitle: 'Search Subtitles',
       dialogWarning: 'Subtitle package downloading is processed in the browser, please do not close the page during download.',
       tabSubtitleBest: 'Subtitle.Best API',
-      tabManual: 'Manual Search'
+      tabManual: 'Manual Search',
+      manual: {
+        tooltip: 'Click keyword to search on website',
+        instruction: 'Click keyword to search on website'
+      }
     }
   },
 

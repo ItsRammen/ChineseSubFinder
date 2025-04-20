@@ -301,11 +301,15 @@ export default {
         unlockDialogMessage: '确定要解锁该视频吗？'
       },
       searchSubtitle: {
-        buttonTitle: '字幕搜索',
-        dialogTitle: '字幕搜索',
-        dialogWarning: '下载字幕包是在浏览器端进行处理的，下载过程中请不要关闭页面',
+        buttonTitle: '搜索字幕',
+        dialogTitle: '搜索字幕',
+        dialogWarning: '字幕包的下载是在浏览器端进行的，请不要关闭本页面，否则会中断下载。',
         tabSubtitleBest: 'Subtitle.Best API',
-        tabManual: '手动搜索'
+        tabManual: '手动搜索',
+        manual: {
+          tooltip: '点击关键字跳转到网站搜索',
+          instruction: '点击关键字跳转到网站搜索'
+        }
       }
     }
   },
