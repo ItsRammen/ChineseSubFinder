@@ -7,7 +7,7 @@
     dense
     icon="lock"
     @click.stop
-    title="当前视频已锁定，不进行字幕下载"
+    :title="$t('library.ignoreVideo.buttonTitleLocked')"
     @click="skip"
     v-bind="$attrs"
   />
@@ -19,7 +19,7 @@
     dense
     icon="lock"
     @click.stop
-    title="点击锁定视频，不进行字幕下载"
+    :title="$t('library.ignoreVideo.buttonTitleUnlocked')"
     @click="skip"
     v-bind="$attrs"
   />
@@ -30,6 +30,7 @@ import LibraryApi from 'src/api/LibraryApi';
 import { SystemMessage } from 'src/utils/message';
 import { useQuasar } from 'quasar';
 import { onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import useEventBus from 'src/composables/use-event-bus';
 import { checkIsVideoLocked } from 'pages/library/use-library';
 
@@ -38,6 +39,7 @@ const props = defineProps({
   videoType: Number,
 });
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const isSkipped = ref(null);
@@ -53,8 +55,10 @@ const getIsSkipped = async () => {
 
 const skip = async () => {
   $q.dialog({
-    title: '提示',
-    message: isSkipped.value ? '确定要解锁该视频吗？' : `确定要锁定该视频，不进行字幕下载吗？`,
+    title: t('common.confirmationTitle'),
+    message: isSkipped.value
+      ? t('library.ignoreVideo.unlockDialogMessage')
+      : t('library.ignoreVideo.lockDialogMessage'),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
@@ -69,7 +73,7 @@ const skip = async () => {
       ],
     });
     if (res) {
-      SystemMessage.success('操作成功');
+      SystemMessage.success(t('common.operationSuccess'));
       getIsSkipped();
     }
   });

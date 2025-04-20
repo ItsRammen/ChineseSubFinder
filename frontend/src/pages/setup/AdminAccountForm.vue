@@ -3,12 +3,12 @@
     <q-input
       filled
       v-model="setupState.form.username"
-      label="输入您的用户名"
-      hint="用户名必须在3-16个字符以内，只能包含字母、数字、下划线"
+      :label="$t('setup.adminForm.usernameLabel')"
+      :hint="$t('setup.adminForm.usernameHint')"
       lazy-rules
       :rules="[
-        (val) => (val && val.length > 0) || '请输入用户名',
-        (val) => /^[_a-zA-Z0-9]{3,16}$/.test(val) || '用户名必须在3-16个字符以内，只能包含字母、数字、下划线',
+        (val) => (val && val.length > 0) || $t('validation.required', { field: $t('setup.adminForm.username') }),
+        (val) => /^[_a-zA-Z0-9]{3,16}$/.test(val) || $t('setup.adminForm.usernameRule'),
       ]"
     />
 
@@ -16,14 +16,14 @@
       filled
       v-model="setupState.form.password"
       type="password"
-      label="输入您的密码"
-      hint="密码必须在6-30位之间"
+      :label="$t('setup.adminForm.passwordLabel')"
+      :hint="$t('setup.adminForm.passwordHint')"
       lazy-rules
       :rules="[
-        (val) => (val && val.length > 0) || '请输入密码',
+        (val) => (val && val.length > 0) || $t('validation.required', { field: $t('setup.adminForm.password') }),
         (val) =>
           /^([a-z]|[A-Z]|[\d~@#$%\*-\+=:,\\?\[\]\{}]){6,30}$/.test(val) ||
-          '密码必须在6-30位之间，且只能由字母、数字、特殊符号组成',
+          $t('setup.adminForm.passwordRule'),
       ]"
     />
 
@@ -31,14 +31,17 @@
       filled
       v-model="setupState.form.confirmPassword"
       type="password"
-      label="确认密码"
+      :label="$t('setup.adminForm.confirmPasswordLabel')"
       hint=""
       lazy-rules
-      :rules="[(val) => val === setupState.form.password || '两次输入的密码不一致']"
+      :rules="[(val) => val === setupState.form.password || $t('validation.passwordsDoNotMatch') ]"
     />
   </q-form>
 </template>
 
 <script setup>
 import { setupState } from 'pages/setup/use-setup';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>

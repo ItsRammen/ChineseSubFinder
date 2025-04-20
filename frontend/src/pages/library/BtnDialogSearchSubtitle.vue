@@ -1,14 +1,14 @@
 <template>
-  <q-btn color="primary" icon="search" size="sm" flat dense v-bind="$attrs" @click="visible = true" title="字幕搜索" />
+  <q-btn color="primary" icon="search" size="sm" flat dense v-bind="$attrs" @click="visible = true" :title="$t('library.searchSubtitle.buttonTitle')" />
 
   <q-dialog v-model="visible" transition-show="slide-up" transition-hide="slide-down" persistent>
     <q-card style="min-width: 70vw">
       <q-card-section>
         <div class="row justify-between items-center">
-          <div class="text-h6 text-grey-8">字幕搜索</div>
+          <div class="text-h6 text-grey-8">{{ $t('library.searchSubtitle.dialogTitle') }}</div>
           <q-btn icon="close" flat round dense @click="visible = false" />
         </div>
-        <div class="text-warning">* 下载字幕包是在浏览器端进行处理的，下载过程中请不要关闭页面</div>
+        <div class="text-warning">* {{ $t('library.searchSubtitle.dialogWarning') }}</div>
       </q-card-section>
       <q-separator />
 

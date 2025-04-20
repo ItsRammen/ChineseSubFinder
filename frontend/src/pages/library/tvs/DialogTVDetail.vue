@@ -6,7 +6,7 @@
   <q-dialog v-model="visible">
     <q-card style="width: 900px; max-width: 900px">
       <q-card-section>
-        <div class="text-h6">{{ data.name }} 剧集列表</div>
+        <div class="text-h6">{{ $t('library.tvs.detailDialog.title', { showName: data.name }) }}</div>
       </q-card-section>
 
       <q-tabs v-model="tab" dense active-color="primary" indicator-color="primary" align="justify" narrow-indicator>
@@ -14,7 +14,7 @@
           v-for="item in categoryVideos"
           :key="item.season"
           :name="item.season"
-          :label="`第${item.season}季`"
+          :label="$t('library.tvs.detailDialog.seasonLabel', { season: item.season })"
           style="max-width: 150px"
         />
       </q-tabs>
@@ -27,13 +27,13 @@
             :model-value="selectAllValue"
             indeterminate-value="maybe"
             @click="handleSelectAll"
-            title="全选/反选"
+            :title="$t('library.tvs.detailDialog.selectAllTooltip')"
           />
 
           <q-btn
             class="btn-download"
             color="primary"
-            label="下载选中"
+            :label="$t('library.tvs.detailDialog.downloadSelectedButton')"
             flat
             :disable="selection.length === 0"
             @click="downloadSelection"
@@ -43,7 +43,7 @@
             class="btn-download"
             color="primary"
             icon="lock"
-            title="锁定选中视频，不进行字幕下载"
+            :title="$t('library.tvs.detailDialog.lockSelectedTooltip')"
             flat
             :disable="selection.length === 0"
             @click="skipAll(true)"
@@ -53,7 +53,7 @@
             class="btn-download"
             color="primary"
             icon="lock_open"
-            title="解锁选中视频"
+            :title="$t('library.tvs.detailDialog.unlockSelectedTooltip')"
             flat
             :disable="selection.length === 0"
             @click="skipAll(false)"
@@ -64,7 +64,7 @@
           <btn-dialog-search-subtitle
             search-package
             :package-episodes="currentTabEpisodes"
-            label="搜索本季字幕包"
+            :label="$t('library.tvs.detailDialog.searchSeasonPackageButton')"
             size="md"
           />
           <btn-upload-multiple-for-tv :items="currentTabEpisodes" />
@@ -77,7 +77,7 @@
                 <q-item-section side top>
                   <q-checkbox v-model="selection" :val="item" />
                 </q-item-section>
-                <q-item-section>第 {{ pandStart2(item.episode) }} 集</q-item-section>
+                <q-item-section>{{ $t('library.tvs.detailDialog.episodeLabel', { episode: pandStart2(item.episode) }) }}</q-item-section>
 
                 <q-item-section v-if="item.sub_f_path_list.length" side>
                   <btn-dialog-preview-video :subtitle-url-list="item.sub_url_list" :path="item.video_f_path" />
@@ -100,16 +100,16 @@
                     dense
                     icon="closed_caption"
                     @click.stop
-                    title="已有字幕"
+                    :title="$t('library.tvs.hasSubtitles')"
                   >
                     <q-popup-proxy anchor="top right">
                       <q-list dense>
                         <q-item v-for="(item1, index) in item.sub_url_list" :key="item1">
                           <q-item-section side>{{ index + 1 }}.</q-item-section>
 
-                          <q-item-section class="overflow-hidden ellipsis" :title="item1.split(/\/|\\/).pop()">
+                          <q-item-section class="overflow-hidden ellipsis" :title="item1.split(/[/\\\\]/).pop()">
                             <a class="text-primary" :href="getUrl(item1)" target="_blank">{{
-                              item1.split(/\/|\\/).pop()
+                              item1.split(/[/\\\\]/).pop()
                             }}</a>
                           </q-item-section>
                           <q-item-section side>
@@ -119,11 +119,7 @@
                               flat
                               dense
                               icon="construction"
-                              :title="`字幕时间轴校准${
-                                !formModel.advanced_settings.fix_time_line
-                                  ? '（此功能需要在进阶设置里开启自动校正字幕时间轴，检测到你当前尚未开启此选项）'
-                                  : ''
-                              }`"
+                              :title="$t('library.movies.fixTimelineTitle') + (!formModel.advanced_settings.fix_time_line ? $t('library.movies.fixTimelineDisabledHint') : '')"
                               @click="doFixSubtitleTimeline(item1)"
                               :disable="!formModel.advanced_settings.fix_time_line"
                             ></q-btn>
@@ -132,7 +128,7 @@
                       </q-list>
                     </q-popup-proxy>
                   </q-btn>
-                  <q-btn v-else color="grey" round flat dense icon="closed_caption" @click.stop title="没有字幕" />
+                  <q-btn v-else color="grey" round flat dense icon="closed_caption" @click.stop :title="$t('library.tvs.noSubtitles')" />
                 </q-item-section>
 
                 <q-item-section side>
@@ -153,7 +149,7 @@
                     flat
                     dense
                     icon="download_for_offline"
-                    title="添加到下载队列"
+                    :title="$t('library.movies.addToDownloadQueue')"
                     @click="downloadSubtitle(item)"
                   ></q-btn>
                 </q-item-section>
@@ -168,6 +164,7 @@
 
 <script setup>
 import { computed, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import LibraryApi from 'src/api/LibraryApi';
 import { SystemMessage } from 'src/utils/message';
 import { VIDEO_TYPE_TV } from 'src/constants/SettingConstants';
@@ -187,6 +184,7 @@ const props = defineProps({
   data: Object,
 });
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const categoryVideos = computed(() => {
@@ -235,19 +233,19 @@ const pandStart2 = (num) => {
 
 const visible = ref(false);
 
-const getUrl = (path) => config.BACKEND_URL + path.split(/\/|\\/).join('/');
+const getUrl = (path) => config.BACKEND_URL + path.split(/[/\\\\]/).join('/');
 
 const downloadSubtitle = async (items) => {
   const downloadList = items instanceof Array ? items : [items];
   $q.dialog({
-    title: `添加 ${downloadList.length}个 视频任务到下载队列`,
-    message: '选择下载任务的类型：',
+    title: t('library.tvs.detailDialog.bulkDownloadDialog.title', { count: downloadList.length }),
+    message: t('library.movies.addToDownloadQueueDialog.message'),
     options: {
       model: 3,
       type: 'radio',
       items: [
-        { label: '插队任务', value: 3 },
-        { label: '一次性任务（执行成功后忽略该任务）', value: 0 },
+        { label: t('library.movies.addToDownloadQueueDialog.optionPriority'), value: 3 },
+        { label: t('library.movies.addToDownloadQueueDialog.optionOneTime'), value: 0 },
       ],
     },
     cancel: true,
@@ -273,7 +271,11 @@ const downloadSubtitle = async (items) => {
     const successCount = result.filter((item) => item.status === 'fulfilled').length;
     const errorCount = result.filter((item) => item.status === 'rejected').length;
 
-    const msg = `成功添加 ${successCount} 个任务到下载队列${errorCount ? `，失败 ${errorCount} 个` : ''}`;
+    const msg = t('library.tvs.detailDialog.bulkDownloadDialog.successMessage', {
+      successCount,
+      errorCount,
+      errorMessage: errorCount ? t('library.tvs.detailDialog.bulkDownloadDialog.errorMessagePart', { errorCount }) : '',
+    });
 
     SystemMessage.success(msg);
   });
@@ -281,8 +283,8 @@ const downloadSubtitle = async (items) => {
 
 const skipAll = async (isSkip) => {
   $q.dialog({
-    title: `${isSkip ? '锁定' : '解锁'}选中视频`,
-    message: `确定要${isSkip ? '锁定' : '解锁'}选中视频吗？`,
+    title: t('library.tvs.detailDialog.bulkLockDialog.title', { action: isSkip ? t('library.tvs.lockAction') : t('library.tvs.unlockAction') }),
+    message: t('library.tvs.detailDialog.bulkLockDialog.message', { action: isSkip ? t('library.tvs.lockAction') : t('library.tvs.unlockAction') }),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
@@ -315,7 +317,7 @@ const skipAll = async (isSkip) => {
       eventBus.emit(`refresh-skip-status-${item.video_f_path}`, res.is_skips[index]);
     });
 
-    SystemMessage.success('操作成功');
+    SystemMessage.success(t('common.operationSuccess'));
   });
 };
 

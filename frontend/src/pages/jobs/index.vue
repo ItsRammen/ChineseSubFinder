@@ -6,7 +6,7 @@
           :disable="selected.length === 0"
           size="md"
           icon="expand_less"
-          label="升级"
+          :label="$t('jobs.upgradePriorityButton')"
           color="primary"
           @click="batchUpdatePriority('high')"
         />
@@ -15,19 +15,19 @@
           :disable="selected.length === 0"
           size="md"
           icon="expand_more"
-          label="降级"
+          :label="$t('jobs.downgradePriorityButton')"
           color="primary"
           @click="batchUpdatePriority('low')"
         />
 
-        <q-btn :disable="selected.length === 0" size="md" label="修改状态" color="primary" @click="batchUpdateStatus" />
+        <q-btn :disable="selected.length === 0" size="md" :label="$t('jobs.changeStatusButton')" color="primary" @click="batchUpdateStatus" />
       </div>
 
       <q-space />
 
       <div class="q-gutter-sm row">
         <q-select
-          label="状态"
+          :label="$t('jobs.filters.status')"
           v-model.number="form.status"
           :options="statusOptions"
           outlined
@@ -39,7 +39,7 @@
         <q-select
           v-model.number="form.videoType"
           :options="videoTypeOptions"
-          label="类型"
+          :label="$t('jobs.filters.type')"
           emit-value
           map-options
           outlined
@@ -49,21 +49,21 @@
         <q-select
           v-model="form.priority"
           :options="priorityOptions"
-          label="优先级"
+          :label="$t('jobs.filters.priority')"
           outlined
           dense
           map-options
           emit-value
           style="width: 130px"
         ></q-select>
-        <q-input v-model="form.search" outlined label="输入关键字搜索" dense></q-input>
+        <q-input v-model="form.search" outlined :label="$t('jobs.filters.search')" dense></q-input>
       </div>
     </div>
 
     <q-separator class="q-mt-md" />
 
     <q-table
-      :columns="columns"
+      :columns="translatedColumns"
       :rows="filteredData"
       flat
       selection="multiple"
@@ -81,7 +81,7 @@
               padding: '2px 6px',
               fontSize: '12px',
             }"
-            >{{ JOB_STATUS_MAP[row.job_status] }}</span
+            >{{ translatedJobStatusMap[row.job_status] }}</span
           >
         </q-td>
       </template>
@@ -98,6 +98,7 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import JobApi from 'src/api/JobApi';
 import { SystemMessage } from 'src/utils/message';
 import { VIDEO_TYPE_NAME_MAP } from 'src/constants/SettingConstants';
@@ -112,28 +113,65 @@ import { useQuasar } from 'quasar';
 import JobLogBtnDialog from 'pages/jobs/JobLogBtnDialog';
 import JobDetailBtnDialog from 'pages/jobs/JobDetailBtnDialog';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
-const columns = [
-  // { label: 'ID', field: 'id' },
-  { label: '状态', field: 'job_status', name: 'jobStatus', align: 'left' },
-  { label: '类型', field: 'video_type', format: (val) => VIDEO_TYPE_NAME_MAP[val], align: 'left' },
-  // { label: '路径', field: 'video_f_path' },
-  { label: '名称', field: 'video_name', width: '100px', align: 'left' },
-  // { label: '特征码', field: 'feature' },
-  // { label: '连续剧目录', field: 'series_root_dir_path' },
-  // { label: '季', field: 'season' },
-  // { label: '集', field: 'episode' },
-  { label: '优先级', field: 'task_priority', align: 'left' },
-  // { label: '视频创建时间', field: 'created_time' },
-  { label: '创建时间', field: 'added_time', align: 'left' },
-  { label: '更新时间', field: 'update_time', align: 'left' },
-  // { label: '媒体服务器ID', field: 'media_server_inside_video_id' },
-  { label: '错误信息', field: 'error_info', align: 'left' },
-  { label: '下载次数', field: 'download_times', align: 'left' },
-  { label: '重试次数', field: 'retry_times', align: 'left' },
-  { label: '操作', name: 'actions', align: 'left', headerClasses: 'sticky-column-header' },
+const baseColumns = [
+  { name: 'jobStatus', labelKey: 'jobs.columns.status', field: 'job_status', align: 'left' },
+  { name: 'videoType', labelKey: 'jobs.columns.type', field: 'video_type', align: 'left' },
+  { name: 'videoName', labelKey: 'jobs.columns.name', field: 'video_name', width: '100px', align: 'left' },
+  { name: 'priority', labelKey: 'jobs.columns.priority', field: 'task_priority', align: 'left' },
+  { name: 'addedTime', labelKey: 'jobs.columns.addedTime', field: 'added_time', align: 'left' },
+  { name: 'updateTime', labelKey: 'jobs.columns.updateTime', field: 'update_time', align: 'left' },
+  { name: 'errorInfo', labelKey: 'jobs.columns.errorInfo', field: 'error_info', align: 'left' },
+  { name: 'downloadTimes', labelKey: 'jobs.columns.downloadTimes', field: 'download_times', align: 'left' },
+  { name: 'retryTimes', labelKey: 'jobs.columns.retryTimes', field: 'retry_times', align: 'left' },
+  { name: 'actions', labelKey: 'jobs.columns.actions', align: 'left', headerClasses: 'sticky-column-header' },
 ];
+
+const translatedColumns = computed(() =>
+  baseColumns.map((col) => ({
+    ...col,
+    label: t(col.labelKey),
+    format: col.name === 'videoType' ? (val) => translatedVideoTypeNameMap.value[val] : undefined,
+  }))
+);
+
+const translatedJobStatusMap = computed(() => {
+  const map = {};
+  Object.keys(JOB_STATUS_MAP).forEach((key) => {
+    map[key] = t(`jobs.statusMap.${key}`);
+  });
+  return map;
+});
+
+const translatedVideoTypeNameMap = computed(() => {
+  const map = {};
+  Object.keys(VIDEO_TYPE_NAME_MAP).forEach((key) => {
+    map[key] = t(`common.videoTypeMap.${key}`);
+  });
+  return map;
+});
+
+const statusOptions = computed(() => [
+  { label: t('common.all'), value: null },
+  ...JOB_STATUS_OPTIONS.map((opt) => ({ label: translatedJobStatusMap.value[opt.value], value: opt.value })),
+]);
+
+const videoTypeOptions = computed(() => [
+  { label: t('common.all'), value: null },
+  ...Object.keys(translatedVideoTypeNameMap.value).map((key) => ({
+    label: translatedVideoTypeNameMap.value[key],
+    value: parseInt(key, 10),
+  })),
+]);
+
+const priorityOptions = computed(() => [
+  { label: t('common.all'), value: null },
+  { label: t('jobs.priorityOptions.low'), value: 'low' },
+  { label: t('jobs.priorityOptions.middle'), value: 'middle' },
+  { label: t('jobs.priorityOptions.high'), value: 'high' },
+]);
 
 const data = ref([]);
 const selected = ref([]);
@@ -198,15 +236,12 @@ const filteredData = computed(() => {
 
     const betweenOfNumber = (num, min, max) => num >= min && num <= max;
     if (priority !== null && item.task_priority !== priority) {
-      // 0-3为高
       if (priority === 'high' && !betweenOfNumber(item.task_priority, 0, 3)) {
         return false;
       }
-      // 7-10为低
       if (priority === 'low' && !betweenOfNumber(item.task_priority, 7, 10)) {
         return false;
       }
-      // 4-6为中
       if (priority === 'middle' && !betweenOfNumber(item.task_priority, 4, 6)) {
         return false;
       }
@@ -216,22 +251,10 @@ const filteredData = computed(() => {
   });
 });
 
-const statusOptions = [{ label: '全部', value: null }, ...JOB_STATUS_OPTIONS];
-const videoTypeOptions = [
-  { label: '全部', value: null },
-  ...Object.keys(VIDEO_TYPE_NAME_MAP).map((key) => ({ label: VIDEO_TYPE_NAME_MAP[key], value: parseInt(key, 10) })),
-];
-const priorityOptions = [
-  { label: '全部', value: null },
-  { label: '低（7-10）', value: 'low' },
-  { label: '中（4-6）', value: 'middle' },
-  { label: '高（0-3）', value: 'high' },
-];
-
 const batchUpdatePriority = async (priority) => {
   $q.dialog({
-    title: '操作确认',
-    message: `确认修改优先级？`,
+    title: t('common.confirmationTitle'),
+    message: t('jobs.confirmPriorityChange'),
     cancel: true,
     persistent: true,
     focus: 'none',
@@ -245,9 +268,9 @@ const batchUpdatePriority = async (priority) => {
     );
     const errorCount = results.filter(({ value: [, err] }) => err !== null).length;
     if (errorCount > 0) {
-      SystemMessage.error(`${errorCount}个任务修改优先级失败！`);
+      SystemMessage.error(t('jobs.priorityUpdateError', { count: errorCount }));
     } else {
-      SystemMessage.success('成功修改优先级');
+      SystemMessage.success(t('jobs.priorityUpdateSuccess'));
     }
 
     refresh();
@@ -256,13 +279,13 @@ const batchUpdatePriority = async (priority) => {
 
 const batchUpdateStatus = async () => {
   $q.dialog({
-    title: '修改状态',
-    message: '需要变更成哪个状态？',
+    title: t('jobs.changeStatusDialog.title'),
+    message: t('jobs.changeStatusDialog.message'),
     options: {
       type: 'radio',
       items: [
-        { label: JOB_STATUS_MAP[JOB_STATUS_PENDING], value: JOB_STATUS_PENDING },
-        { label: JOB_STATUS_MAP[JOB_STATUS_IGNORE], value: JOB_STATUS_IGNORE },
+        { label: translatedJobStatusMap.value[JOB_STATUS_PENDING], value: JOB_STATUS_PENDING },
+        { label: translatedJobStatusMap.value[JOB_STATUS_IGNORE], value: JOB_STATUS_IGNORE },
       ],
     },
     cancel: true,
@@ -278,9 +301,9 @@ const batchUpdateStatus = async () => {
     );
     const errorCount = results.filter(({ value: [, err] }) => err !== null).length;
     if (errorCount > 0) {
-      SystemMessage.error(`${errorCount}个任务修改状态失败！`);
+      SystemMessage.error(t('jobs.statusUpdateError', { count: errorCount }));
     } else {
-      SystemMessage.success('成功修改任务状态');
+      SystemMessage.success(t('jobs.statusUpdateSuccess'));
     }
 
     refresh();

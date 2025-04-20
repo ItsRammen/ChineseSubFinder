@@ -23,9 +23,9 @@
             dense
             icon="closed_caption"
             :label="`${hasSubtitleVideoCount}/${detailInfo.one_video_info.length}`"
-            title="已有字幕"
+            :title="$t('library.tvs.hasSubtitles')"
           />
-          <q-btn v-else color="grey" round flat dense icon="closed_caption" title="没有字幕" />
+          <q-btn v-else color="grey" round flat dense icon="closed_caption" :title="$t('library.tvs.noSubtitles')" />
         </dialog-t-v-detail>
       </div>
     </div>
@@ -34,6 +34,7 @@
 
 <script setup>
 import { computed, onMounted, ref, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import DialogTVDetail from 'pages/library/tvs/DialogTVDetail';
 import LibraryApi from 'src/api/LibraryApi';
 import { getUrl, subtitleUploadList } from 'pages/library/use-library';
@@ -41,6 +42,8 @@ import { getUrl, subtitleUploadList } from 'pages/library/use-library';
 const props = defineProps({
   data: Object,
 });
+
+const { t } = useI18n();
 
 const posterInfo = ref(null);
 const detailInfo = ref(null);

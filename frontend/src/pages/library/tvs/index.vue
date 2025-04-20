@@ -3,14 +3,14 @@
     <div class="row q-gutter-md">
       <btn-dialog-library-refresh />
       <btn-dialog-media-server-subtitle-refresh />
-      <q-btn color="primary" @click="setLock(true)" label="锁定" />
-      <q-btn color="primary" @click="setLock(false)" label="取消锁定" />
-      <div v-if="selection.length" class="self-center text-grey">已选中{{ selection.length }}项</div>
-      <q-btn v-if="selection.length" color="primary" flat @click="selection = []" label="清空选择" />
+      <q-btn color="primary" @click="setLock(true)" :label="$t('library.tvs.lockButton')" />
+      <q-btn color="primary" @click="setLock(false)" :label="$t('library.tvs.unlockButton')" />
+      <div v-if="selection.length" class="self-center text-grey">{{ $t('library.tvs.selectedCount', { count: selection.length }) }}</div>
+      <q-btn v-if="selection.length" color="primary" flat @click="selection = []" :label="$t('library.tvs.clearSelectionButton')" />
 
       <q-space />
 
-      <q-input v-model="filterForm.search" outlined dense label="输入关键字搜索">
+      <q-input v-model="filterForm.search" outlined dense :label="$t('library.searchPlaceholder')">
         <template #append>
           <q-icon name="search" />
         </template>
@@ -34,13 +34,14 @@
         </div>
       </q-intersection>
     </div>
-    <div v-else class="q-my-md text-grey">当前没有可用视频，点击"更新缓存"按钮可重建缓存</div>
+    <div v-else class="q-my-md text-grey">{{ $t('library.tvs.emptyState') }}</div>
   </q-page>
 </template>
 
 <script setup>
 import { useLibrary } from 'pages/library/use-library';
 import { computed, reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import ListItemTV from 'pages/library/tvs/ListItemTV';
 import BtnDialogLibraryRefresh from 'pages/library/BtnLibraryRefresh';
 import BtnDialogMediaServerSubtitleRefresh from 'pages/library/BtnMediaServerSubtitleRefresh';
@@ -49,6 +50,7 @@ import LibraryApi from 'src/api/LibraryApi';
 import { VIDEO_TYPE_TV } from 'src/constants/SettingConstants';
 import { useQuasar } from 'quasar';
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const filterForm = reactive({
@@ -110,12 +112,12 @@ const lockTv = async (item, lock) => {
 
 const setLock = async (flag) => {
   if (selection.value.length === 0) {
-    SystemMessage.warn('请至少选择一项！');
+    SystemMessage.warn(t('library.tvs.selectAtLeastOneWarning'));
     return;
   }
   $q.dialog({
-    title: '提示',
-    message: `确定${flag ? '锁定' : '取消锁定'}选中的${selection.value.length}项吗？`,
+    title: t('common.confirmationTitle'),
+    message: t('library.tvs.lockDialogMessage', { action: flag ? t('library.tvs.lockAction') : t('library.tvs.unlockAction'), count: selection.value.length }),
     cancel: true,
     persistent: true,
   }).onOk(async () => {
@@ -124,7 +126,7 @@ const setLock = async (flag) => {
     );
     // 取消选中
     selection.value = [];
-    SystemMessage.success('操作成功！');
+    SystemMessage.success(t('common.operationSuccess'));
   });
 };
 </script>

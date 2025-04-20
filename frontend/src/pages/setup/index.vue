@@ -1,25 +1,33 @@
 <template>
   <login-bg-area />
-  <header class="text-h4 q-pa-md text-center text-bold text-white">欢迎使用 ChineseSubFinder！</header>
+  <header class="text-h4 q-pa-md text-center text-bold text-white">{{ $t('setup.welcome') }}</header>
   <q-separator />
+  <div class="q-pa-md row justify-center">
+    <q-btn-toggle
+      v-model="locale"
+      toggle-color="primary"
+      :options="localeOptions"
+      @update:model-value="changeQuasarLang"
+    />
+  </div>
   <main class="flex justify-center items-center q-pa-md q-mt-lg">
     <div style="width: 800px">
       <q-stepper v-model="step" ref="stepper" animated vertical flat>
-        <q-step name="1" prefix="1" :done="step > '1'" title="创建管理账号">
+        <q-step name="1" prefix="1" :done="step > '1'" :title="$t('setup.step1Title')">
           <admin-account-form ref="adminAccountForm" />
         </q-step>
 
-        <q-step name="2" prefix="2" :done="step > '2'" title="电影、连续剧目录设置">
+        <q-step name="2" prefix="2" :done="step > '2'" :title="$t('setup.step2Title')">
           <scan-folder-form ref="scanFolderForm" />
         </q-step>
 
-        <q-step name="3" :done="step > '3'" prefix="3" title="选择媒体服务器">
+        <q-step name="3" :done="step > '3'" prefix="3" :title="$t('setup.step3Title')">
           <q-form class="q-gutter-md">
             <select-media-server-form />
           </q-form>
         </q-step>
 
-        <q-step v-if="setupState.form.mediaServer === 'emby'" name="31" prefix="4" title="Emby设置">
+        <q-step v-if="setupState.form.mediaServer === 'emby'" name="31" prefix="4" :title="$t('setup.step4Title')">
           <q-form class="q-gutter-md">
             <emby-setup-form ref="mediaServerSettingForm" />
           </q-form>
@@ -27,14 +35,14 @@
 
         <template v-slot:navigation>
           <q-stepper-navigation>
-            <q-btn v-if="showSubmitButton" @click="submit" :loading="submitting" color="primary" label="完成" />
-            <q-btn v-else @click="nextStep" color="primary" label="下一步" />
+            <q-btn v-if="showSubmitButton" @click="submit" :loading="submitting" color="primary" :label="$t('buttons.finish')" />
+            <q-btn v-else @click="nextStep" color="primary" :label="$t('buttons.next')" />
             <q-btn
               v-if="step > '1'"
               flat
               color="deep-orange"
               @click="$refs.stepper.previous()"
-              label="上一步"
+              :label="$t('buttons.previous')"
               class="q-ml-sm"
             />
           </q-stepper-navigation>
@@ -47,6 +55,8 @@
 <script setup>
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+import { useQuasar } from 'quasar';
 import CommonApi from 'src/api/CommonApi';
 import { SystemMessage } from 'src/utils/message';
 import AdminAccountForm from 'pages/setup/AdminAccountForm';
@@ -61,6 +71,26 @@ import { getInfo, isRunningInDocker } from 'src/store/systemState';
 import { SUB_NAME_FORMAT_NORMAL } from 'src/constants/SettingConstants';
 import { useAppStatusLoading } from 'src/composables/use-app-status-loading';
 import { Dialog } from 'quasar';
+
+const { locale, t } = useI18n();
+const $q = useQuasar();
+
+const localeOptions = [
+  { value: 'en-US', label: 'English' },
+  { value: 'zh-CN', label: '中文' }
+];
+
+const changeQuasarLang = async (val) => {
+  try {
+    const langIso = val.replace('-', '');
+    const langModule = await import(`quasar/lang/${val}.mjs`);
+    $q.lang.set(langModule.default);
+  } catch (err) {
+    console.error('Failed to load Quasar language pack:', err);
+  }
+};
+
+changeQuasarLang(locale.value);
 
 useSetup();
 const { startLoading } = useAppStatusLoading();
@@ -97,17 +127,15 @@ const showSubmitButton = computed(() => {
 
 const submit = async () => {
   if (isRunningInDocker.value) {
-    // 检测电影和连续剧目录是否以 /media 开头
     const isMovieStartsWithMedia = setupState.form.movieFolder.every((item) => item.startsWith('/media'));
     const isSeriesStartsWithMedia = setupState.form.seriesFolder.every((item) => item.startsWith('/media'));
     if (!isMovieStartsWithMedia || !isSeriesStartsWithMedia) {
       Dialog.create({
-        title: '请修改相关配置后继续',
+        title: t('setup.dockerWarningTitle'),
         html: true,
-        message:
-          '软件运行在Docker中，请将电影和电视剧目录修改为 <b>/media</b> 下的目录，否则可能会因为权限问题导致无法正确的加载媒体库',
+        message: t('setup.dockerWarningMessage'),
         persistent: true,
-        ok: '确定',
+        ok: t('buttons.ok'),
       });
       return;
     }
@@ -152,7 +180,7 @@ const submit = async () => {
     SystemMessage.error(err.message);
     return;
   }
-  SystemMessage.success('初始化完成');
+  SystemMessage.success(t('setup.successMessage'));
   await getInfo();
   startLoading();
   router.push('/access/login');

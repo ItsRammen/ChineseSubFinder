@@ -30,15 +30,15 @@
           dense
           icon="closed_caption"
           @click.stop
-          title="已有字幕"
+          :title="$t('library.movies.hasSubtitles')"
         >
           <q-popup-proxy>
             <q-list dense>
               <q-item v-for="(item, index) in detialInfo.sub_url_list" :key="item">
                 <q-item-section side>{{ index + 1 }}.</q-item-section>
 
-                <q-item-section class="overflow-hidden ellipsis" :title="item.split`(/\/|\\/)`.pop()">
-                  <a class="text-primary" :href="getUrl(item)" target="_blank">{{ item.split(/\/|\\/).pop() }}</a>
+                <q-item-section class="overflow-hidden ellipsis" :title="item.split(/[/\\\\]/).pop()">
+                  <a class="text-primary" :href="getUrl(item)" target="_blank">{{ item.split(/[/\\\\]/).pop() }}</a>
                 </q-item-section>
                 <q-item-section side>
                   <q-btn
@@ -47,11 +47,7 @@
                     flat
                     dense
                     icon="construction"
-                    :title="`字幕时间轴校准${
-                      !formModel.advanced_settings.fix_time_line
-                        ? '（此功能需要在进阶设置里开启自动校正字幕时间轴，检测到你当前尚未开启此选项）'
-                        : ''
-                    }`"
+                    :title="$t('library.movies.fixTimelineTitle') + (!formModel.advanced_settings.fix_time_line ? $t('library.movies.fixTimelineDisabledHint') : '')"
                     @click="doFixSubtitleTimeline(item)"
                     :disable="!formModel.advanced_settings.fix_time_line"
                   ></q-btn>
@@ -60,7 +56,7 @@
             </q-list>
           </q-popup-proxy>
         </q-btn>
-        <q-btn v-else color="grey" size="sm" round flat dense icon="closed_caption" @click.stop title="没有字幕" />
+        <q-btn v-else color="grey" size="sm" round flat dense icon="closed_caption" @click.stop :title="$t('library.movies.noSubtitles')" />
       </div>
 
       <btn-dialog-search-subtitle :path="props.data.video_f_path" is-movie />
@@ -75,7 +71,7 @@
         flat
         dense
         icon="download_for_offline"
-        title="添加到下载队列"
+        :title="$t('library.movies.addToDownloadQueue')"
         @click="downloadSubtitle"
         size="sm"
       ></q-btn>
@@ -93,6 +89,7 @@ import LibraryApi from 'src/api/LibraryApi';
 import { SystemMessage } from 'src/utils/message';
 import { VIDEO_TYPE_MOVIE } from 'src/constants/SettingConstants';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { doFixSubtitleTimeline, getUrl, subtitleUploadList } from 'pages/library/use-library';
 import BtnIgnoreVideo from 'pages/library/BtnIgnoreVideo';
 import BtnUploadSubtitle from 'pages/library/BtnUploadSubtitle';
@@ -112,6 +109,7 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
 const $q = useQuasar();
 
 const posterInfo = ref(null);
@@ -139,14 +137,14 @@ const hasSubtitle = computed(() => detialInfo.value?.sub_url_list.length > 0);
 
 const downloadSubtitle = async () => {
   $q.dialog({
-    title: '添加到下载队列',
-    message: '选择下载任务的类型：',
+    title: t('library.movies.addToDownloadQueueDialog.title'),
+    message: t('library.movies.addToDownloadQueueDialog.message'),
     options: {
       model: 3,
       type: 'radio',
       items: [
-        { label: '插队任务', value: 3 },
-        { label: '一次性任务（执行成功后忽略该任务）', value: 0 },
+        { label: t('library.movies.addToDownloadQueueDialog.optionPriority'), value: 3 },
+        { label: t('library.movies.addToDownloadQueueDialog.optionOneTime'), value: 0 },
       ],
     },
     cancel: true,
@@ -155,20 +153,18 @@ const downloadSubtitle = async () => {
     const [, err] = await LibraryApi.downloadSubtitle({
       video_type: VIDEO_TYPE_MOVIE,
       physical_video_file_full_path: props.data.video_f_path,
-      task_priority_level: val, // 一般的队列等级是5，如果想要快，那么可以先默认这里填写3，这样就可以插队
-      // 媒体服务器内部视频ID  `video/list` 中 获取到的 media_server_inside_video_id，可以用于自动 Emby 字幕列表刷新用
+      task_priority_level: val,
       media_server_inside_video_id: props.data.media_server_inside_video_id,
     });
     if (err !== null) {
       SystemMessage.error(err.message);
     } else {
-      SystemMessage.success('已加入下载队列');
+      SystemMessage.success(t('library.movies.addToDownloadQueueDialog.successMessage'));
     }
   });
 };
 
 watch(subtitleUploadList, (val, oldVal) => {
-  // 上传字幕列表当前文件有变化时刷新
   if (
     (val.find((e) => e.video_f_path === props.data.video_f_path) &&
       !oldVal.find((e) => e.video_f_path === props.data.video_f_path)) ||
@@ -200,7 +196,6 @@ onMounted(() => {
 
 .area-cover:hover {
   .btn-download {
-    //display: block;
     opacity: 1;
   }
 }

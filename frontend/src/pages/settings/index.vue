@@ -4,9 +4,9 @@
       <template v-slot:avatar>
         <q-icon name="warning" />
       </template>
-      任务进程运行中，不能更改配置
+      {{ $t('settings.jobRunningWarning') }}
       <template v-slot:action>
-        <q-btn color="white" label="去总览页面停止" flat @click="$router.push('/overview')" />
+        <q-btn color="white" :label="$t('settings.gotoOverviewButton')" flat @click="$router.push('/overview')" />
       </template>
       <span> </span>
     </q-banner>
@@ -20,12 +20,12 @@
         narrow-indicator
         style="max-width: 700px"
       >
-        <q-tab name="basic" label="基础配置" />
-        <q-tab name="advanced" label="进阶配置" />
-        <q-tab name="subSource" label="字幕源设置" />
-        <q-tab name="emby" label="Emby配置" />
-        <q-tab name="development" label="开发人员配置" />
-        <q-tab name="experiment" label="实验室" />
+        <q-tab name="basic" :label="$t('settings.tabs.basic')" />
+        <q-tab name="advanced" :label="$t('settings.tabs.advanced')" />
+        <q-tab name="subSource" :label="$t('settings.tabs.subSource')" />
+        <q-tab name="emby" :label="$t('settings.tabs.emby')" />
+        <q-tab name="development" :label="$t('settings.tabs.development')" />
+        <q-tab name="experiment" :label="$t('settings.tabs.experiment')" />
       </q-tabs>
 
       <q-separator />
@@ -72,6 +72,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import BasicSettings from 'pages/settings/SettingsPanelBasic';
 import AdvancedSettings from 'pages/settings/SettingsPanelAdvanced';
 import EmbySettings from 'pages/settings/SettingsPanelEmby';
@@ -82,6 +83,7 @@ import ExperimentSettings from 'pages/settings/SettingsPanelExperiment';
 import FormSubmitArea from 'pages/settings/FormSubmitArea';
 import SubSourceSettings from 'pages/settings/SettingsPanelSubSource';
 
+const { t } = useI18n();
 const tab = ref('basic');
 
 const isSettingsLoaded = computed(() => Object.keys(formModel).length);

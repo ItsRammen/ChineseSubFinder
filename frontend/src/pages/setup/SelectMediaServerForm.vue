@@ -6,7 +6,7 @@
           <q-radio v-model="setupState.form.mediaServer" val="" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>无</q-item-label>
+          <q-item-label>{{ $t('setup.mediaServerForm.none') }}</q-item-label>
         </q-item-section>
       </q-item>
 
@@ -48,4 +48,8 @@
 
 <script setup>
 import { setupState } from 'pages/setup/use-setup';
+import { useI18n } from 'vue-i18n';
+
+// Use i18n even if only $t is used in the template, for consistency
+const { t } = useI18n();
 </script>

@@ -3,7 +3,7 @@
     <q-list dense>
       <q-item>
         <q-item-section>
-          <q-item-label>Emby的内网URL</q-item-label>
+          <q-item-label>{{ $t('setup.embyForm.urlLabel') }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-input
@@ -11,36 +11,36 @@
             standout
             dense
             :rules="[
-              (val) => !!val || '不能为空',
-              (val) => val.match(/^https?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[.\w]*)*$/) || '请输入正确的URL',
+              (val) => !!val || $t('validation.cannotBeEmpty'),
+              (val) => val.match(/^https?:\/\/\w+(\.\w+)*(:[0-9]+)?\/?(\/[.\w]*)*$/) || $t('validation.invalidUrl'),
             ]"
           />
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label>APIKey</q-item-label>
+          <q-item-label>{{ $t('setup.embyForm.apiKeyLabel') }}</q-item-label>
         </q-item-section>
         <q-item-section>
-          <q-input v-model="setupState.form.emby.apiKey" standout dense :rules="[(val) => !!val || '不能为空']" />
+          <q-input v-model="setupState.form.emby.apiKey" standout dense :rules="[(val) => !!val || $t('validation.cannotBeEmpty')]" />
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
-          <q-item-label>获取最多的剧集数量</q-item-label>
+          <q-item-label>{{ $t('setup.embyForm.limitCountLabel') }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-input
             v-model.number="setupState.form.emby.limitCount"
             standout
             dense
-            :rules="[(val) => !!val || '不能为空', (val) => /^\d+$/.test(val) || '必须是整数']"
+            :rules="[(val) => !!val || $t('validation.cannotBeEmpty'), (val) => /^\d+$/.test(val) || $t('validation.mustBeInteger')]"
           />
         </q-item-section>
       </q-item>
       <q-item tag="label" v-ripple>
         <q-item-section>
-          <q-item-label>是否跳过已观看的</q-item-label>
+          <q-item-label>{{ $t('setup.embyForm.skipWatchedLabel') }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-toggle v-model="setupState.form.emby.skipWatched" />
@@ -49,7 +49,7 @@
 
       <q-item :class="{ disabled: setupState.form.emby.autoOrManual }" tag="label" v-ripple>
         <q-item-section>
-          <q-item-label>自动匹配IMDB ID</q-item-label>
+          <q-item-label>{{ $t('setup.embyForm.autoMatchImdbLabel') }}</q-item-label>
         </q-item-section>
         <q-item-section>
           <q-toggle v-model="setupState.form.emby.autoOrManual" :disable="setupState.form.emby.autoOrManual" />
@@ -61,4 +61,7 @@
 
 <script setup>
 import { setupState } from 'pages/setup/use-setup';
+import { useI18n } from 'vue-i18n';
+
+const { t } = useI18n();
 </script>

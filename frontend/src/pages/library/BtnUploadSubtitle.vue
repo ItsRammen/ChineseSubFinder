@@ -1,7 +1,7 @@
 <template>
   <div v-if="isInQueue" class="row items-center q-gutter-xs">
     <q-spinner-hourglass color="primary" size="22px" />
-    <div v-if="!dense" style="font-size: 90%">字幕上传中</div>
+    <div v-if="!dense" style="font-size: 90%">{{ $t('library.uploadSubtitle.statusUploading') }}</div>
   </div>
   <q-btn
     v-else
@@ -10,9 +10,9 @@
     dense
     icon="upload"
     v-bind="$attrs"
-    :label="dense ? '' : '上传本地字幕'"
+    :label="dense ? '' : $t('library.uploadSubtitle.buttonLabel')"
     @click="handleUploadClick"
-    title="上传本地字幕"
+    :title="$t('library.uploadSubtitle.buttonTitle')"
   />
 
   <q-input v-show="false" type="file" ref="qFile" v-model="uploadFile" accept=".srt,.ass,.ssa,.sbv,.webvtt" />
@@ -20,6 +20,7 @@
 
 <script setup>
 import { ref, watch, watchEffect } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { getSubtitleUploadList, subtitleUploadList } from 'pages/library/use-library';
 import LibraryApi from 'src/api/LibraryApi';
 import { SystemMessage } from 'src/utils/message';
@@ -33,6 +34,7 @@ const props = defineProps({
   },
 });
 
+const { t } = useI18n();
 const uploadFile = ref(null);
 const qFile = ref(null);
 const isInQueue = ref(false);
@@ -51,7 +53,7 @@ const upload = async () => {
   formData.append('file', uploadFile.value[0]);
   isInQueue.value = true;
   await LibraryApi.uploadSubtitle(formData);
-  SystemMessage.success('字幕上传成功。如果设置开启了“自动校正时间轴”，处理需要一些时间，请耐心等待', {
+  SystemMessage.success(t('library.uploadSubtitle.successMessage'), {
     timeout: 3000,
   });
   await getSubtitleUploadList();

@@ -6,7 +6,7 @@
 
       <q-space />
 
-      <q-input v-model="filterForm.search" outlined dense label="输入关键字搜索">
+      <q-input v-model="filterForm.search" outlined dense :label="$t('library.searchPlaceholder')">
         <template #append>
           <q-icon name="search" />
         </template>
@@ -20,16 +20,19 @@
         <list-item-movie :data="item" width="180px" cover-height="220px" />
       </q-intersection>
     </div>
-    <div v-else class="q-my-md text-grey">当前没有可用视频，点击"更新缓存"按钮可重建缓存</div>
+    <div v-else class="q-my-md text-grey">{{ $t('library.movies.emptyState') }}</div>
   </q-page>
 </template>
 
 <script setup>
 import { useLibrary } from 'pages/library/use-library';
 import { computed, reactive } from 'vue';
+import { useI18n } from 'vue-i18n';
 import BtnDialogLibraryRefresh from 'pages/library/BtnLibraryRefresh';
 import BtnDialogMediaServerSubtitleRefresh from 'pages/library/BtnMediaServerSubtitleRefresh';
 import ListItemMovie from './ListItemMovie';
+
+const { t } = useI18n();
 
 const filterForm = reactive({
   hasSubtitle: null,
